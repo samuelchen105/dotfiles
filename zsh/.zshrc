@@ -66,6 +66,7 @@ zinit wait lucid light-mode for \
 # === Wait 0a ===
 # fzf-tab
 zinit wait="0a" lucid light-mode for \
+	b4b4r07/enhancd \
         Aloxaf/fzf-tab
 # fzf-tab config
 # disable sort when completing `git checkout`
@@ -82,7 +83,6 @@ zstyle ':fzf-tab:*' switch-group ',' '.'
 # === Wait 1 ===
 # history-search-multi-word
 zinit wait"1" lucid for \
-	b4b4r07/enhancd \
     atinit'zstyle ":history-search-multi-word" page-size "8"' \
 	zdharma/history-search-multi-word 
 
