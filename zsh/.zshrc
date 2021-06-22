@@ -108,5 +108,11 @@ alias grep="grep --colour=auto"
 # Environment Variables #
 #########################
 
-export DOCKER_HOST="tcp://localhost:2327"
+export DOCKER_HOST="tcp://0.0.0.0:2375"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/yuhsuan/google-cloud-sdk/path.zsh.inc' ]; then . '/home/yuhsuan/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/yuhsuan/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/yuhsuan/google-cloud-sdk/completion.zsh.inc'; fi
 
