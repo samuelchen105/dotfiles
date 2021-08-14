@@ -92,7 +92,9 @@ zinit wait"1" lucid for \
 
 # history
 typeset -g HISTFILE=~/.zsh_history HISTSIZE=10000 SAVEHIST=1000
-setopt SHARE_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
 
 ###########
 # Aliases #
@@ -104,11 +106,31 @@ alias l="ls"    l.='ls -d .*'   la='ls -a'   ll='ls -lbt created'
 alias rm='rm -i'
 alias grep="grep --colour=auto"
 
+# git
+alias gt="git"
+alias gta="git add"
+alias gtaa="git add -A"
+alias gtb="git branch"
+alias gtcm="git commit"
+alias gtco="git checkout"
+alias gtll="git log --oneline --graph -10"
+alias gtpl="git pull --prune"
+alias gtps="git push"
+alias gtrb="git rebase"
+alias gtrs="git restore --staged"
+alias gtst="git add -A && git stash"
+alias gtstp="git stash pop"
+alias gtss="git status"
+
 #########################
 # Environment Variables #
 #########################
 
 export DOCKER_HOST="tcp://0.0.0.0:2375"
+
+##################
+# Auto Generated #
+##################
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/yuhsuan/google-cloud-sdk/path.zsh.inc' ]; then . '/home/yuhsuan/google-cloud-sdk/path.zsh.inc'; fi
