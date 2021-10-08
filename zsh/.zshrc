@@ -101,32 +101,34 @@ setopt HIST_IGNORE_SPACE
 ###########
 
 # ls (exa instead)
-alias ls="exa -bh --color=auto"
-alias l="ls"    l.='ls -d .*'   la='ls -a'   ll='ls -lbt created'
+alias ls='exa -bh --color=auto'
+alias l='ls'
+alias la='ls -a'
+alias ll='ls -al'
 alias rm='rm -i'
-alias grep="grep --colour=auto"
+alias grep='grep --colour=auto'
 
 # git
-alias gt="git"
-alias gta="git add"
-alias gtaa="git add -A"
-alias gtb="git branch"
-alias gtcm="git commit"
-alias gtco="git checkout"
-alias gtll="git log --oneline --graph -10"
-alias gtpl="git pull --prune"
-alias gtps="git push"
-alias gtrb="git rebase"
-alias gtrs="git restore --staged"
-alias gtst="git add -A && git stash"
-alias gtstp="git stash pop"
-alias gtss="git status"
+alias gt='git'
+alias gta='git add'
+alias gtaa='git add -A'
+alias gtb='git branch'
+alias gtcm='git commit'
+alias gtco='git checkout'
+alias gtll='git log --oneline --graph -10'
+alias gtpl='git pull --prune'
+alias gtps='git push'
+alias gtrb='git rebase'
+alias gtrs='git restore --staged'
+alias gtst='git add -A && git stash'
+alias gtstp='git stash pop'
+alias gtss='git status'
 
 #########################
 # Environment Variables #
 #########################
 
-export DOCKER_HOST="tcp://0.0.0.0:2375"
+export DOCKER_HOST='tcp://0.0.0.0:2375'
 
 ##################
 # Auto Generated #
