@@ -11,7 +11,7 @@ if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
 fi
 
 source "$HOME/.zinit/bin/zinit.zsh"
-autoload -Uz _zinit
+autoload -Uz _zinit 
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
 # Load a few important annexes, without Turbo
@@ -63,22 +63,21 @@ zinit wait lucid light-mode for \
 zinit wait lucid light-mode for \
 	wfxr/forgit
 
-# === Wait 0a ===
-# fzf-tab
-zinit wait="0a" lucid light-mode for \
-	b4b4r07/enhancd \
-        Aloxaf/fzf-tab
-# fzf-tab config
-# disable sort when completing `git checkout`
-zstyle ':completion:*:git-checkout:*' sort false
-# set descriptions format to enable group support
-zstyle ':completion:*:descriptions' format '[%d]'
-# set list-colors to enable filename colorizing
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# preview directory's content with exa when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-# switch group using `,` and `.`
-zstyle ':fzf-tab:*' switch-group ',' '.'
+# # === Wait 0a ===
+# # fzf-tab
+# zinit wait="0a" lucid light-mode for \
+#         Aloxaf/fzf-tab
+# # fzf-tab config
+# # disable sort when completing `git checkout`
+# zstyle ':completion:*:git-checkout:*' sort false
+# # set descriptions format to enable group support
+# zstyle ':completion:*:descriptions' format '[%d]'
+# # set list-colors to enable filename colorizing
+# zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# # preview directory's content with exa when completing cd
+# zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+# # switch group using `,` and `.`
+# zstyle ':fzf-tab:*' switch-group ',' '.'
 
 # === Wait 1 ===
 # history-search-multi-word
@@ -113,6 +112,7 @@ alias gt='git'
 alias gta='git add'
 alias gtaa='git add -A'
 alias gtb='git branch'
+alias gtba='git branch -a'
 alias gtcm='git commit'
 alias gtco='git checkout'
 alias gtll='git log --oneline --graph -10'
@@ -120,15 +120,10 @@ alias gtpl='git pull --prune'
 alias gtps='git push'
 alias gtrb='git rebase'
 alias gtrs='git restore --staged'
-alias gtst='git add -A && git stash'
+alias gtre='git reset'
+alias gtst='git stash'
 alias gtstp='git stash pop'
 alias gtss='git status'
-
-#########################
-# Environment Variables #
-#########################
-
-export DOCKER_HOST='tcp://0.0.0.0:2375'
 
 ##################
 # Auto Generated #
