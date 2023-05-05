@@ -1,14 +1,14 @@
-#########
-# Zinit #
-#########
+# ============================================================================================
+# Zinit
+# ============================================================================================
 
 if [[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/zi/init.zsh" ]]; then
   source "${XDG_CONFIG_HOME:-$HOME/.config}/zi/init.zsh" && zzinit
 fi
 
-#########
-# Theme #
-#########
+# ============================================================================================
+# Theme
+# ============================================================================================
 
 # powerlevel10k
 zi ice depth=1; zi light romkatv/powerlevel10k
@@ -20,9 +20,9 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-###########
-# Plugins #
-###########
+# ============================================================================================
+# Plugins
+# ============================================================================================
 
 # === Trigger-load ===
 # LS_COLORS
@@ -51,19 +51,19 @@ zi wait"1" lucid for \
     atinit'zstyle ":history-search-multi-word" page-size "8"' \
 	zdharma/history-search-multi-word 
 
-###########
-# Setopts #
-###########
+# ============================================================================================
+# Setopts
+# ============================================================================================
 
 # history
-typeset -g HISTFILE=~/.zsh_history HISTSIZE=10000 SAVEHIST=1000
+typeset -g HISTFILE=~/.zsh_history HISTSIZE=5000000 SAVEHIST=1000000
 setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 
-###########
-# Aliases #
-###########
+# ============================================================================================
+# Aliases
+# ============================================================================================
 
 # ls (exa instead)
 alias ls='exa -bh --color=auto'
@@ -91,13 +91,6 @@ alias gtst='git stash'
 alias gtstp='git stash pop'
 alias gtss='git status'
 
-##################
-# Auto Generated #
-##################
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/yuhsuan/google-cloud-sdk/path.zsh.inc' ]; then . '/home/yuhsuan/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/home/yuhsuan/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/yuhsuan/google-cloud-sdk/completion.zsh.inc'; fi
-
+# ============================================================================================
+# Auto Generated Below...
+# ============================================================================================
