@@ -81,7 +81,7 @@ alias gtb='git branch'
 alias gtba='git branch -a'
 alias gtcm='git commit'
 alias gtco='git checkout'
-alias gtll='git --no-pager log --oneline --graph'
+alias gtll='git log --oneline --graph'
 alias gtpl='git pull --prune'
 alias gtps='git push'
 alias gtrb='git rebase'
@@ -90,6 +90,12 @@ alias gtre='git reset'
 alias gtst='git stash'
 alias gtstp='git stash pop'
 alias gtss='git status'
+
+# ============================================================================================
+# Envs for Interactive Shell
+# ============================================================================================
+
+export GIT_PAGER="cut -c 1-${COLUMNS-80}"
 
 # ============================================================================================
 # Auto Generated Below...
