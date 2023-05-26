@@ -49,7 +49,7 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 # LS_COLORS https://github.com/trapd00r/LS_COLORS
 [[ -f ~/.local/share/lscolors.sh ]] || curl -fsSL https://raw.githubusercontent.com/trapd00r/LS_COLORS/master/lscolors.sh > ~/.local/share/lscolors.sh
 source ~/.local/share/lscolors.sh
-zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”
+zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"
 
 # ============================================================================================
 # Aliases
