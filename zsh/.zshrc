@@ -1,58 +1,38 @@
 # ============================================================================================
-# Zinit
+# Zim
 # ============================================================================================
 
-if [[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/zi/init.zsh" ]]; then
-  source "${XDG_CONFIG_HOME:-$HOME/.config}/zi/init.zsh" && zzinit
+ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
+zstyle ':zim:zmodule' use 'degit'
+
+# Download zimfw plugin manager if missing.
+if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+  if (( ${+commands[curl]} )); then
+    curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
+        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+  else
+    mkdir -p ${ZIM_HOME} && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
+        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+  fi
 fi
+
+# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
+  source ${ZIM_HOME}/zimfw.zsh init -q
+fi
+
+# Initialize modules.
+source ${ZIM_HOME}/init.zsh
 
 # ============================================================================================
 # Theme
 # ============================================================================================
 
-# powerlevel10k
-zi ice depth=1; zi light romkatv/powerlevel10k
-# Enable Powerlevel10k instant prompt
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # ============================================================================================
-# Plugins
-# ============================================================================================
-
-# === Trigger-load ===
-# LS_COLORS
-zi ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
-    atpull'%atclone' pick"clrs.zsh" nocompile'!' \
-    atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
-zi light trapd00r/LS_COLORS
-
-# === Wait 0 ===
-# auto-completions & syntax-highlighting
-zi wait lucid light-mode for \
-    atinit"zicompinit; zicdreplay" \
-        zdharma/fast-syntax-highlighting \
-    atload"_zsh_autosuggest_start" \
-        zsh-users/zsh-autosuggestions \
-    blockf atpull'zi creinstall -q .' \
-        zsh-users/zsh-completions 
-
-# forgit
-zi wait lucid light-mode for \
-	wfxr/forgit
-
-# === Wait 1 ===
-# history-search-multi-word
-zi wait"1" lucid for \
-    atinit'zstyle ":history-search-multi-word" page-size "8"' \
-	zdharma/history-search-multi-word 
-
-# ============================================================================================
-# Setopts
+# Module Configurations
 # ============================================================================================
 
 # history
@@ -61,17 +41,19 @@ setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 
+# zsh-syntax-highlighting
+# Set what highlighters will be used.
+# See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+
+# LS_COLORS https://github.com/trapd00r/LS_COLORS
+[[ -f ~/.local/share/lscolors.sh ]] || curl -fsSL https://raw.githubusercontent.com/trapd00r/LS_COLORS/master/lscolors.sh > ~/.local/share/lscolors.sh
+source ~/.local/share/lscolors.sh
+zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”
+
 # ============================================================================================
 # Aliases
 # ============================================================================================
-
-# ls (exa instead)
-alias ls='exa -bh --color=auto'
-alias l='ls'
-alias la='ls -a'
-alias ll='ls -al'
-alias rm='rm -i'
-alias grep='grep --colour=auto'
 
 # git
 alias gt='git'
