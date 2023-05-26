@@ -77,7 +77,7 @@ alias gtss='git status'
 # Envs for Interactive Shell
 # ============================================================================================
 
-export GIT_PAGER="cut -c 1-${COLUMNS-80}"
+export GIT_PAGER="less -FX"
 
 # ============================================================================================
 # Auto Generated Below...
