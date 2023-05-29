@@ -47,6 +47,7 @@ setopt HIST_IGNORE_SPACE
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 
 # LS_COLORS https://github.com/trapd00r/LS_COLORS
+[[ -d ~/.local/share ]] || mkdir -p ~/.local/share
 [[ -f ~/.local/share/lscolors.sh ]] || curl -fsSL https://raw.githubusercontent.com/trapd00r/LS_COLORS/master/lscolors.sh > ~/.local/share/lscolors.sh
 source ~/.local/share/lscolors.sh
 zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"
