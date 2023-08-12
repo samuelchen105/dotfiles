@@ -37,7 +37,9 @@ source ${ZIM_HOME}/init.zsh
 
 # history
 typeset -g HISTFILE=~/.zsh_history HISTSIZE=5000000 SAVEHIST=1000000
+unsetopt SHARE_HISTORY
 setopt INC_APPEND_HISTORY
+setopt HIST_FIND_NO_DUPS
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 
@@ -64,7 +66,8 @@ alias gtb='git branch'
 alias gtba='git branch -a'
 alias gtcm='git commit'
 alias gtco='git checkout'
-alias gtll='git log --oneline --graph'
+alias gtlo='git log --oneline --graph'
+alias gtl9='git log --oneline --graph -9'
 alias gtpl='git pull --prune'
 alias gtps='git push'
 alias gtrb='git rebase'
@@ -74,11 +77,40 @@ alias gtst='git stash'
 alias gtstp='git stash pop'
 alias gtss='git status'
 
+# docker
+alias dk='docker'
+alias dki='docker image'
+alias dkil='docker images'
+alias dkip='docker image prune -f'
+alias dkc='docker container'
+alias dkcp='docker container prune -f'
+alias dkps='docker ps -a'
+alias dkm='docker compose'
+alias dkmps='docker compose ps -a'
+
+# kubectl
+alias k='kubectl'
+
 # ============================================================================================
-# Envs for Interactive Shell
+# Envs
 # ============================================================================================
 
+# git pager
 export GIT_PAGER="less -FX"
+
+# homebrew
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# go bin
+if command -v go &>/dev/null; then
+  export PATH="$(go env GOPATH)/bin:${PATH}"
+fi
+
+# ~/.local/bin
+export PATH="${HOME}/.local/bin:${PATH}"
+
 
 # ============================================================================================
 # Auto Generated Below...
