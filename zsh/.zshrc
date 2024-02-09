@@ -103,14 +103,25 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# go bin
+# ~/.local/bin
+export PATH="${HOME}/.local/bin:${PATH}"
+
+# go
 if command -v go &>/dev/null; then
   export PATH="$(go env GOPATH)/bin:${PATH}"
 fi
 
-# ~/.local/bin
-export PATH="${HOME}/.local/bin:${PATH}"
+# python
+export PYENV_ROOT="$HOME/.pyenv"
+if command -v pyenv &>/dev/null; then
+  eval "$(pyenv init -)"
+fi
 
+# nodejs
+export NVM_DIR="$HOME/.nvm"
+
+# cpp
+export VCPKG_ROOT="$HOME/vcpkg"
 
 # ============================================================================================
 # Auto Generated Below...
