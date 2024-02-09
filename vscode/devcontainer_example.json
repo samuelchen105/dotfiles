@@ -1,0 +1,34 @@
+{
+  "name": "Go",
+
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "dev-container",
+
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
+
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "mhutchie.git-graph",
+        "eamodio.gitlens",
+        "esbenp.prettier-vscode",
+        "foxundermoon.shell-format",
+        "codeium.codeium",
+        "golang.go"
+      ]
+    }
+  },
+
+  // "forwardPorts": [3000],
+
+  "portsAttributes": {
+    "9000": {
+      "label": "Server port",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "remoteUser": "developer"
+}

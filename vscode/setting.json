@@ -1,0 +1,47 @@
+{
+  "explorer.confirmDragAndDrop": false,
+  "files.autoSave": "onFocusChange",
+  "window.commandCenter": false,
+  "editor.fontFamily": "MesloLGS NF, Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontSize": 14,
+  "editor.cursorSurroundingLines": 10,
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.inlineSuggest.enabled": true,
+  "dev.containers.defaultExtensions": ["mutantdino.resourcemonitor"],
+  "go.toolsManagement.autoUpdate": true,
+  "markdownlint.config": {
+    "default": true,
+    "MD024": false,
+    "MD033": {
+      "allowed_elements": ["br", "a", "span", "details", "summary"]
+    }
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[dockercompose]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.minimap.enabled": false,
+  "codeium.enableCodeLens": false,
+  "codeium.enableConfig": {
+    "*": true
+  },
+  "gitlens.graph.minimap.enabled": false,
+  "gitlens.graph.minimap.additionalTypes": ["localBranches"]
+}
