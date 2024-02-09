@@ -9,7 +9,11 @@
 
   "customizations": {
     "vscode": {
-      "settings": {},
+      "settings": {
+        "dotfiles.repository": "https://github.com/yuhsuan105/dotfiles.git",
+        "dotfiles.targetPath": "~/dotfiles",
+        "dotfiles.installCommand": "install.sh"
+      },
       "extensions": [
         "mhutchie.git-graph",
         "eamodio.gitlens",
@@ -30,5 +34,10 @@
     }
   },
 
-  "remoteUser": "developer"
+  "remoteUser": "developer",
+
+  "mounts": [
+    "source=profile,target=/root,type=volume",
+    "target=/root/.vscode-server,type=volume"
+  ]
 }
