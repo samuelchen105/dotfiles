@@ -1,3 +1,3 @@
 #!/bin/zsh
 
-stow -t $HOME zsh && source ~/.zshrc
+stow -R -t $HOME zsh && source ~/.zshrc

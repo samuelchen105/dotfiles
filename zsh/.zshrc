@@ -91,6 +91,11 @@ alias dkmps='docker compose ps -a'
 # kubectl
 alias k='kubectl'
 
+# mac
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  alias o.vsc="open -a Visual\ Studio\ Code"
+fi
+
 # ============================================================================================
 # Envs
 # ============================================================================================
