@@ -1,4 +1,40 @@
 # ============================================================================================
+# Envs
+# ============================================================================================
+
+# homebrew
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# ~/.local/bin
+export PATH="${HOME}/.local/bin:${PATH}"
+
+# git pager
+export GIT_PAGER="less -FX"
+
+# go
+if command -v go &>/dev/null; then
+  export PATH="$(go env GOPATH)/bin:${PATH}"
+fi
+# export GOPROXY=https://proxy.golang.org,direct
+# export GONOSUMDB="gitlab.com/withdipp/*"
+# export GOPRIVATE="gitlab.com/withdipp/*"
+# export GONOPROXY="gitlab.com/withdipp/*"
+
+# python
+export PYENV_ROOT="$HOME/.pyenv"
+if command -v pyenv &>/dev/null; then
+  eval "$(pyenv init -)"
+fi
+
+# nodejs
+export NVM_DIR="$HOME/.nvm"
+
+# cpp
+export VCPKG_ROOT="$HOME/vcpkg"
+
+# ============================================================================================
 # Zim
 # ============================================================================================
 
@@ -95,38 +131,6 @@ alias k='kubectl'
 if [[ "$OSTYPE" == "darwin"* ]]; then
   alias o.vsc="open -a Visual\ Studio\ Code"
 fi
-
-# ============================================================================================
-# Envs
-# ============================================================================================
-
-# git pager
-export GIT_PAGER="less -FX"
-
-# homebrew
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
-
-# ~/.local/bin
-export PATH="${HOME}/.local/bin:${PATH}"
-
-# go
-if command -v go &>/dev/null; then
-  export PATH="$(go env GOPATH)/bin:${PATH}"
-fi
-
-# python
-export PYENV_ROOT="$HOME/.pyenv"
-if command -v pyenv &>/dev/null; then
-  eval "$(pyenv init -)"
-fi
-
-# nodejs
-export NVM_DIR="$HOME/.nvm"
-
-# cpp
-export VCPKG_ROOT="$HOME/vcpkg"
 
 # ============================================================================================
 # Auto Generated Below...
