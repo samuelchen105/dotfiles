@@ -17,10 +17,7 @@ export GIT_PAGER="less -FX"
 if command -v go &>/dev/null; then
   export PATH="$(go env GOPATH)/bin:${PATH}"
 fi
-# export GOPROXY=https://proxy.golang.org,direct
-# export GONOSUMDB="gitlab.com/withdipp/*"
 # export GOPRIVATE="gitlab.com/withdipp/*"
-# export GONOPROXY="gitlab.com/withdipp/*"
 
 # python
 export PYENV_ROOT="$HOME/.pyenv"
@@ -33,6 +30,9 @@ export NVM_DIR="$HOME/.nvm"
 
 # cpp
 export VCPKG_ROOT="$HOME/vcpkg"
+
+# ruby
+eval "$(rbenv init - zsh)"
 
 # ============================================================================================
 # Zim
@@ -135,3 +135,8 @@ fi
 # ============================================================================================
 # Auto Generated Below...
 # ============================================================================================
+
+# local-builder
+if command -v local-builder &>/dev/null; then
+  eval "$(local-builder completion zsh)"
+fi

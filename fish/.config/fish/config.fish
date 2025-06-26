@@ -10,7 +10,6 @@ end
 # ~/.local/bin
 fish_add_path "$HOME/.local/bin"
 
-
 # ============================================================================================
 # Interactive
 # ============================================================================================
@@ -37,6 +36,11 @@ end
 # ============================================================================================
 # Aliases
 # ============================================================================================
+
+# helper functions
+function echoc -a color message --description='Print message with color'
+    echo (set_color $color)"$message"(set_color normal)
+end
 
 # eza/exa
 if command -q eza
@@ -76,6 +80,41 @@ alias gtst='git stash'
 alias gtstp='git stash pop'
 alias gtss='git status'
 
+function gc -a branch_name --wraps='git checkout'
+    if test -n "$branch_name"
+        git checkout $branch_name
+        return
+    end
+
+    set -l branch_name (git branch | fzf)
+    if test -n "$branch_name"
+        git checkout (string trim --chars='* ' $branch_name)
+    end
+end
+
+function gbd --description='List and delete git branches with deleted upstream branches'
+    # Get branches with deleted upstream (marked as [gone])
+    set -l gone_branches (git branch -vv | grep ': gone]' | awk '{print $1}' | string trim --chars='* ')
+
+    if test (count $gone_branches) -eq 0
+        echo "No branches with deleted upstream found."
+        return
+    end
+
+    # Use fzf to select branches to delete
+    set -l selected_branches (printf '%s\n' $gone_branches | fzf --multi --preview='git log --oneline --graph -10 {}' --header='Select branches to delete (Tab for multi-select)')
+
+    if test -n "$selected_branches"
+        echoc cyan "Deleting selected branches:"
+        for branch in $selected_branches
+            echoc green "Deleting $branch"
+            git branch -D $branch
+        end
+    else
+        echo "No branches selected for deletion."
+    end
+end
+
 # docker
 alias dk='docker'
 alias dki='docker image'
@@ -88,17 +127,51 @@ alias dkps='docker ps -a'
 alias dkm='docker compose'
 alias dkmps='docker compose ps -a'
 
-# kubectl
-alias k='kubectl'
+function dl
+    set service (docker-compose config --services | fzf)
+    if test -n "$service"
+        docker-compose logs -n 100 -f $service
+    end
+end
+
+function drmi --description='List and delete docker images with fzf'
+    # Get docker images (skip header)
+    set -l images (docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.CreatedAt}}\t{{.Size}}" | tail -n +2)
+
+    if test (count $images) -eq 0
+        echo "No docker images found."
+        return
+    end
+
+    # Use fzf to select images to delete
+    set -l selected_images (printf '%s\n' $images | fzf --multi --header-lines=0 --preview='docker inspect {3}' --header='Select images to delete (Tab for multi-select)' --bind='tab:toggle+up' | awk '{print $1":"$2}')
+
+    if test -n "$selected_images"
+        echoc cyan "Deleting selected images:"
+        for image in $selected_images
+            echoc green "Deleting $image"
+            docker rmi $image
+        end
+    else
+        echo "No images selected for deletion."
+    end
+end
 
 # mac
 if test $(uname) = Darwin
-    alias o.vsc="open -a Visual\ Studio\ Code"
+    alias ovsc='open -a Visual\ Studio\ Code'
+    alias oc='open -a Cursor'
+    alias ocp='open -a Cursor ~/Workspace/Project/$(ls -D ~/Workspace/Project | fzf)'
 end
 
 # work
-alias k.dev="gcloud container clusters get-credentials dipp-massimo-development-main-cluster --region asia-east1 --project dipp-massimo-development && kubectl config set-context --current --namespace platform"
-alias k.stg="gcloud container clusters get-credentials dipp-massimo-staging-main-cluster --region asia-east1 --project dipp-massimo-staging && kubectl config set-context --current --namespace platform"
+alias k='kubectl'
+alias k.dev='gcloud container clusters get-credentials dipp-massimo-development-main-cluster --region asia-east1 --project dipp-massimo-development && kubectl config set-context --current --namespace platform'
+alias k.stg='gcloud container clusters get-credentials dipp-massimo-staging-main-cluster --region asia-east1 --project dipp-massimo-staging && kubectl config set-context --current --namespace platform'
+
+# misc
+alias cdp='cd ~/Workspace/Project/$(ls -D ~/Workspace/Project | fzf)'
+alias denv='export $(grep -v "^#" .env | xargs | string split " ")'
 
 # ============================================================================================
 # Envs
@@ -110,6 +183,11 @@ set -gx GIT_PAGER "less -FX"
 # go
 if command -q go
     fish_add_path "$(go env GOPATH)/bin"
+
+    # lock go version
+    if test $(uname) = Darwin
+        alias go="$(brew --prefix go@1.23)/bin/go"
+    end
 end
 
 # python
