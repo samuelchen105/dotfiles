@@ -190,23 +190,5 @@ if command -q go
     end
 end
 
-# python
-if command -q pyenv
-    set -gx PYENV_ROOT "$HOME/.pyenv"
-    eval "$(pyenv init -)"
-end
-set -gx OPENBLAS $(brew --prefix openblas)
-
-# nodejs
-set -gx NVM_DIR $(brew --prefix nvm)
-
 # cpp
 set -gx VCPKG_ROOT "$HOME/vcpkg"
-
-# gcloud
-if test -e "$(brew --prefix)/share/google-cloud-sdk/path.bash.inc"
-    bass source "$(brew --prefix)/share/google-cloud-sdk/path.bash.inc"
-end
-if test -e "$(brew --prefix)/share/google-cloud-sdk/completion.bash.inc"
-    bass source "$(brew --prefix)/share/google-cloud-sdk/completion.bash.inc"
-end

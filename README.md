@@ -1,10 +1,8 @@
 # Dotfiles
 
-## Usage Example
+## Setup
 
 ```bash
-cd ~
-git clone https://github.com/yuhsuan105/dotfiles.git
-cd dotfiles
-stow -t $HOME zsh
+cd dotfiles/stow
+bash setup_fish.sh
 ```
