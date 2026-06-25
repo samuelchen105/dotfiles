@@ -1,8 +1,21 @@
 # Dotfiles
 
-## Setup
+## Dependencies
 
 ```bash
-cd dotfiles/stow
-bash setup_fish.sh
+brew install fish stow eza delta ripgrep starship fzf
+```
+
+## Usage
+
+```bash
+cd ~
+git clone https://github.com/yuhsuan105/dotfiles.git
+cd dotfiles
+```
+
+### Fish
+
+```bash
+stow -R -t $HOME fish starship
 ```
