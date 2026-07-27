@@ -3,7 +3,7 @@
 # fzf theme
 # https://github.com/catppuccin/fzf/blob/main/themes/catppuccin-fzf-mocha.fish
 set -gx FZF_DEFAULT_OPTS "\
---color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
+--color=bg+:#313244,bg:#151515,spinner:#F5E0DC,hl:#F38BA8 \
 --color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC \
 --color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 \
 --color=selected-bg:#45475A \
@@ -27,24 +27,12 @@ alias grs='git restore --staged'
 alias gre='git reset'
 alias gst='git stash'
 alias gstp='git stash pop'
-# alias gl='git log --oneline --graph'
-# alias gll='git log --oneline --graph -20'
+alias gl='git log --oneline --graph -20'
+alias gll='git log --oneline --graph'
 
-function gco --wraps='git checkout'
-    if test (count $argv) -gt 0
-        git checkout $argv
-        return
-    end
-
-    devtool git-checkout
-end
 
 function gbd
     nu --config ~/.config/nushell/config.nu ~/.config/nushell/scripts/gbd.nu $argv
-end
-
-function gl --wraps='git log'
-    nu --config ~/.config/nushell/config.nu ~/.config/nushell/scripts/gl.nu $argv
 end
 
 alias d='docker'
@@ -88,6 +76,7 @@ function drmi --description='List and delete docker images with fzf'
         end
     else
         echo "No images selected for deletion."
+        return
     end
 
     echo "Pruning unused images..."
@@ -96,6 +85,21 @@ end
 
 # kubectl
 alias k='kubectl'
+alias kcur='kubectl config current-context'
+
+function kuse
+    set -l selected (k config get-contexts | fzf \
+        --header-lines=1 \
+        --nth=1 \
+        --accept-nth=1 \
+        --layout=reverse \
+        --info=inline \
+        --prompt="Select Context: ") || return
+
+    if test -n "$selected"
+        k config use $selected
+    end
+end
 
 # mac
 if test $(uname) = Darwin
@@ -126,13 +130,17 @@ end
 # misc
 alias denv='export $(grep -v "^#" .env | xargs | string split " ")'
 
+function cdr --description "Change directory to the Git repository root"
+    if set -l git_root (git rev-parse --show-toplevel 2>/dev/null)
+        cd $git_root
+    else
+        echo "Not a Git repository."
+        return 1
+    end
+end
+
 # ===== Tool integrations =====
 
-# carapace
-if command -q carapace
-    set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
-    carapace _carapace | source
-end
 
 # starship
 if command -q starship
