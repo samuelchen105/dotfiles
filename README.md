@@ -3,7 +3,7 @@
 ## Dependencies
 
 ```bash
-brew install fish stow eza delta ripgrep starship fzf
+brew install fish stow eza ripgrep starship fzf
 ```
 
 ## Usage
