@@ -1,11 +1,11 @@
 use std::io::{self, ErrorKind, IsTerminal};
-use std::process::Stdio;
 
 use comfy_table::{Row, Table, presets::NOTHING};
 use crossterm::terminal;
-use eyre::{Result, WrapErr, bail};
+use eyre::{Result, WrapErr};
 use tokio::io::AsyncWriteExt;
-use tokio::process::Command;
+
+use crate::core::sh::CommandBuilder;
 
 pub async fn table_view<H, R>(header: H, rows: R) -> Result<()>
 where
@@ -37,30 +37,16 @@ async fn render(table: &Table) -> Result<()> {
 }
 
 async fn render_with_pager(table: &Table) -> Result<()> {
-    let mut pager = Command::new("less")
-        .args(["-R", "-~", "--mouse", "--redraw-on-quit", "--header=1"])
-        .stdin(Stdio::piped())
-        .spawn()
-        .wrap_err("failed to start less")?;
-
-    let mut stdin = pager
-        .stdin
-        .take()
-        .ok_or_else(|| eyre::eyre!("failed to open less stdin"))?;
     let output = table.to_string() + "\n";
-    if let Err(error) = stdin.write_all(output.as_bytes()).await
-        && error.kind() != ErrorKind::BrokenPipe
-    {
-        return Err(error).wrap_err("failed to write table to less");
-    }
-    drop(stdin);
 
-    let status = pager.wait().await.wrap_err("failed to wait for less")?;
-    if !status.success() {
-        bail!("less exited with status {status}");
-    }
-
-    Ok(())
+    CommandBuilder::new("less")
+        .arg("-R")
+        .arg("-~")
+        .arg("--mouse")
+        .arg("--redraw-on-quit")
+        .arg("--header=1")
+        .run_with_input(output)
+        .await
 }
 
 fn need_pager(table: &Table) -> bool {

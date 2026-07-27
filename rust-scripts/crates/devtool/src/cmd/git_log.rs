@@ -3,9 +3,9 @@ use std::collections::HashSet;
 use clap::Args;
 use comfy_table::{Cell, Color};
 use crossterm::style::{Color as TerminalColor, Stylize};
-use eyre::{OptionExt, Result, WrapErr, bail};
-use tokio::process::Command;
+use eyre::{OptionExt, Result};
 
+use crate::core::sh::CommandBuilder;
 use crate::core::terminal::table_view::table_view;
 
 const FIELD_SEPARATOR: char = '△';
@@ -52,25 +52,18 @@ struct GitRef {
     remote: bool,
 }
 
-async fn get_logs(lines: Option<usize>) -> Result<Vec<LogEntry>> {
-    let mut command = Command::new("git");
-    command.args(["log", "--pretty=%h△%s△%aN△%D", "--first-parent"]);
-    if let Some(lines) = lines {
-        command.arg("-n").arg(lines.to_string());
+async fn get_logs(number: Option<usize>) -> Result<Vec<LogEntry>> {
+    let mut c = CommandBuilder::new("git")
+        .arg("log")
+        .arg("--pretty=%h△%s△%aN△%D")
+        .arg("--first-parent");
+    if let Some(number) = number {
+        c = c.arg("-n").arg(number.to_string().as_str());
     }
-
-    let output = command.output().await.wrap_err("failed to run git log")?;
-    if !output.status.success() {
-        bail!(
-            "git log failed: {}",
-            String::from_utf8_lossy(&output.stderr).trim()
-        );
-    }
-
-    String::from_utf8(output.stdout)
-        .wrap_err("git log returned non-UTF-8 output")?
-        .lines()
-        .map(parse_log_entry)
+    c.output_lines()
+        .await?
+        .into_iter()
+        .map(|line| parse_log_entry(&line))
         .collect()
 }
 

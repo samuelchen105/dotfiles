@@ -4,7 +4,7 @@ use std::collections::HashSet;
 
 use chrono::{DateTime, Local, TimeDelta};
 use clap::Args;
-use eyre::{Result, bail};
+use eyre::Result;
 use ratatui::style::{Color, Stylize};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::ListItem;
@@ -19,67 +19,66 @@ pub struct GitCheckoutArgs {}
 
 impl GitCheckoutArgs {
     pub async fn run(&self) -> Result<()> {
-        let tracked_remotes = get_tracked_remotes().await?;
-        let mut branches = get_branches(&tracked_remotes).await?;
+        let mut branches = get_branches().await?;
 
         // Sort branches
         branches.sort_by(|a, b| {
             let is_a_remote = a.name.starts_with("origin/");
             let is_b_remote = b.name.starts_with("origin/");
             if !is_a_remote && is_b_remote {
-                return Ordering::Less;
+                Ordering::Less
             } else if is_a_remote && !is_b_remote {
-                return Ordering::Greater;
+                Ordering::Greater
             } else {
-                return a.committed.cmp(&b.committed).reverse();
+                a.committed.cmp(&b.committed).reverse()
             }
         });
 
         let selected = select(&branches)?;
 
         if let Some(selected) = selected {
-            println!("selected: {selected:?}");
-            println!("branches: {:?}", &branches[selected]);
+            let target = &branches[selected];
+
+            let mut flags = Vec::new();
+            if target.remote_only {
+                flags.push("--track");
+            }
+
+            CommandBuilder::new("git")
+                .arg("checkout")
+                .args(flags)
+                .arg(target.name.as_str())
+                .run()
+                .await?;
         }
 
         Ok(())
     }
 }
 
-async fn get_tracked_remotes() -> Result<HashSet<String>> {
-    let mut tracked_remotes = HashSet::new();
-    let mut reader = CommandBuilder::new("git")
-        .args(&["for-each-ref", "--format=%(upstream:short)", "refs/heads"])
-        .run_with_stream()?;
+async fn get_branches() -> Result<Vec<Branch>> {
+    let tracked_remotes: HashSet<String> = CommandBuilder::new("git")
+        .arg("for-each-ref")
+        .arg("--format=%(upstream:short)")
+        .arg("refs/heads")
+        .output_lines()
+        .await?
+        .into_iter()
+        .collect();
 
-    while let Some(line) = reader.next_line().await? {
-        let line = line.trim().to_owned();
-        if !line.is_empty() {
-            tracked_remotes.insert(line);
-        }
-    }
-
-    let status = reader.wait().await?;
-    if !status.success() {
-        bail!("failed to get tracked remotes");
-    }
-
-    Ok(tracked_remotes)
-}
-
-async fn get_branches(tracked_remotes: &HashSet<String>) -> Result<Vec<Branch>> {
-    let mut reader = CommandBuilder::new("git")
+    let lines = CommandBuilder::new("git")
         .arg("for-each-ref")
         .arg("--sort=-committerdate")
         .arg("--format=%(HEAD)△%(refname:short)△%(committerdate:unix)△%(upstream:track,nobracket)△%(upstream:remotename)")
         .arg("refs/heads")
         .arg("refs/remotes")
-        .run_with_stream()?;
+        .output_lines()
+        .await?;
 
     let now = Local::now();
     let mut branches = Vec::new();
-    while let Some(line) = reader.next_line().await? {
-        let line = line.trim().to_owned();
+    for line in lines {
+        let line = line.trim();
         if line.is_empty() {
             continue;
         }
@@ -118,12 +117,8 @@ async fn get_branches(tracked_remotes: &HashSet<String>) -> Result<Vec<Branch>> 
             committed: commit_time,
             status,
             last_edit: format_duration(now - commit_time),
+            remote_only: name.starts_with("origin/"),
         });
-    }
-
-    let status = reader.wait().await?;
-    if !status.success() {
-        bail!("failed to get tracked remotes");
     }
 
     Ok(branches)
@@ -135,6 +130,7 @@ struct Branch {
     committed: DateTime<Local>,
     status: BranchStatus,
     last_edit: String,
+    remote_only: bool,
 }
 
 impl ListView for Branch {
@@ -167,7 +163,7 @@ impl ListView for Branch {
 }
 
 fn push_column<'a>(spans: &mut Vec<Span<'a>>, span: Span<'a>, width: usize) {
-    let padding = width.saturating_sub(span.width()) + 3;
+    let padding = width.saturating_sub(span.width()) + 2;
     spans.push(span);
     spans.push(Span::raw(" ".repeat(padding)));
 }
