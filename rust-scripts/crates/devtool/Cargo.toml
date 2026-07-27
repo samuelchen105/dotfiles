@@ -11,3 +11,4 @@ chrono = { workspace = true }
 regex = { workspace = true }
 ratatui = { workspace = true }
 crossterm = { workspace = true }
+comfy-table = { workspace = true }

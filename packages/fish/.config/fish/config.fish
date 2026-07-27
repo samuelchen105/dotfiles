@@ -27,8 +27,8 @@ alias grs='git restore --staged'
 alias gre='git reset'
 alias gst='git stash'
 alias gstp='git stash pop'
-alias gl='git log --oneline --graph -20'
-alias gll='git log --oneline --graph'
+alias gll='devtool git-log'
+alias gl='devtool git-log -n 20'
 
 
 function gbd

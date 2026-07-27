@@ -16,6 +16,8 @@ struct Cli {
 enum Commands {
     /// Select a Git branch to check out
     GitCheckout(cmd::git_checkout::GitCheckoutArgs),
+    /// Show the first-parent Git log
+    GitLog(cmd::git_log::GitLogArgs),
 }
 
 #[tokio::main]
@@ -24,6 +26,9 @@ async fn main() -> Result<()> {
 
     match cli.command {
         Commands::GitCheckout(args) => {
+            args.run().await?;
+        }
+        Commands::GitLog(args) => {
             args.run().await?;
         }
     }
