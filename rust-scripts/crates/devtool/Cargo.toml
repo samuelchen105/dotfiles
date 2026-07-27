@@ -1,0 +1,13 @@
+[package]
+name = "devtool"
+version = "0.1.0"
+edition.workspace = true
+
+[dependencies]
+eyre = { workspace = true }
+clap = { workspace = true }
+tokio = { workspace = true }
+chrono = { workspace = true }
+regex = { workspace = true }
+ratatui = { workspace = true }
+crossterm = { workspace = true }
