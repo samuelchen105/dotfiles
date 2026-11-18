@@ -1,4 +1,4 @@
-# ===== Env =====
+# ===== Env & Path =====
 
 set -gx XDG_CONFIG_HOME "$HOME/.config"
 set -gx XDG_DATA_HOME "$HOME/.local/share"
@@ -7,9 +7,9 @@ set -gx XDG_CACHE_HOME "$HOME/.cache"
 
 set -gx GIT_PAGER "less -RF"
 
-# ===== Path =====
+set -gx DEV_SCRIPT_DIR "$HOME/.local/scripts"
 
-# ~/.local/bin
+# Add ~/.local/bin to path
 fish_add_path "$HOME/.local/bin"
 
 # ===== Integrations =====

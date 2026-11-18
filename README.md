@@ -12,10 +12,5 @@ brew install fish stow eza ripgrep starship fzf
 cd ~
 git clone https://github.com/yuhsuan105/dotfiles.git
 cd dotfiles
-```
-
-### Fish
-
-```bash
-stow -R -t $HOME fish starship
+./scripts/install.py
 ```

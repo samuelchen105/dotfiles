@@ -94,7 +94,7 @@ end
 
 # Quick file/folder opening
 function __select_project
-    set -l workspace_root "$HOME/workspaces"
+    set -l workspace_root "$HOME/workspace"
     set -l dirs (find "$workspace_root" -mindepth 1 -maxdepth 1 -type d)
     set -l base_names
     for dir in $dirs
