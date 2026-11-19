@@ -5,7 +5,8 @@ import subprocess
 import sys
 from dataclasses import dataclass
 
-from utils.common import Color, ColorText, ScriptError
+from utils.color import cyan, green, red, yellow
+from utils.common import ScriptError
 
 CHAR_CHECK = "󰄬"
 CHAR_CLOSE = "󰅖"
@@ -16,8 +17,8 @@ CHAR_ARROW_DOWN = "󱦳"
 @dataclass
 class Branch:
     name: str
-    status: ColorText
-    commit_time: ColorText
+    status: str
+    commit_time: str
 
 
 def get_tracked_remotes() -> set[str]:
@@ -33,7 +34,7 @@ def get_tracked_remotes() -> set[str]:
         text=True,
     )
     if result.returncode != 0:
-        raise ScriptError(result.returncode, "failed to get tracked remotes")
+        raise ScriptError("get tracked remotes", result.returncode, result.stderr)
 
     remotes = set()
     for line in result.stdout.strip().split("\n"):
@@ -42,13 +43,13 @@ def get_tracked_remotes() -> set[str]:
     return remotes
 
 
-def parse_branch_status(track: str, remote: str) -> ColorText:
+def parse_branch_status(track: str, remote: str) -> tuple[str, int]:
     if remote == "":
-        return ColorText("-", Color.NONE)
+        return "-", 1
     if track == "":
-        return ColorText(CHAR_CHECK, Color.GREEN)
+        return green(CHAR_CHECK), len(CHAR_CHECK)
     if track == "gone":
-        return ColorText(CHAR_CLOSE, Color.RED)
+        return red(CHAR_CLOSE), len(CHAR_CLOSE)
 
     # The branch is diverged
     output = ""
@@ -66,7 +67,7 @@ def parse_branch_status(track: str, remote: str) -> ColorText:
     if behind_m is not None:
         output += f"{CHAR_ARROW_DOWN}{behind_m.group(1)}"
 
-    return ColorText(output, Color.YELLOW)
+    return yellow(output), len(output)
 
 
 def get_branches() -> list[str]:
@@ -86,7 +87,7 @@ def get_branches() -> list[str]:
         text=True,
     )
     if result.returncode != 0:
-        raise ScriptError(result.returncode, "failed to get local branches")
+        raise ScriptError("get branches", result.returncode, result.stderr)
 
     name_width = 1
     status_width = 1
@@ -99,13 +100,13 @@ def get_branches() -> list[str]:
         if head != "" or (name in tracked_remotes) or (name == "origin"):
             continue
 
-        status = parse_branch_status(track, remote)
-        commit_time_view = ColorText(commit_time, Color.CYAN)
+        status, status_len = parse_branch_status(track, remote)
+        commit_time_view = cyan(commit_time)
 
         branches.append(Branch(name, status, commit_time_view))
         name_width = max(name_width, len(name))
         time_width = max(time_width, len(commit_time))
-        status_width = max(status_width, len(status.text))
+        status_width = max(status_width, status_len)
 
     outputs: list[str] = []
     for b in branches:
@@ -163,4 +164,4 @@ if __name__ == "__main__":
     try:
         main()
     except ScriptError as e:
-        sys.exit(f"Error: {e}")
+        sys.exit(f"{red('ERR')} {e}")
