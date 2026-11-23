@@ -5,7 +5,7 @@ function gsw --wraps='git switch' --description 'Switch branches interactively o
     end
 
     if not command -q python3
-        echo 'gsw: python3 is required' >&2
+        echo 'python3 is required' >&2
         return 127
     end
 

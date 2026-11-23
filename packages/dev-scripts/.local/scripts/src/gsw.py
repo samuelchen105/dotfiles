@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
 
-import re
 import subprocess
 import sys
 from dataclasses import dataclass
 
-from utils.color import cyan, green, red, yellow
+from utils.color import cyan, red
 from utils.common import ScriptError
-
-CHAR_CHECK = "󰄬"
-CHAR_CLOSE = "󰅖"
-CHAR_ARROW_UP = "󱦲"
-CHAR_ARROW_DOWN = "󱦳"
+from utils.git import parse_branch_status
 
 
 @dataclass
@@ -41,33 +36,6 @@ def get_tracked_remotes() -> set[str]:
         remotes.add(line.strip())
 
     return remotes
-
-
-def parse_branch_status(track: str, remote: str) -> tuple[str, int]:
-    if remote == "":
-        return "-", 1
-    if track == "":
-        return green(CHAR_CHECK), len(CHAR_CHECK)
-    if track == "gone":
-        return red(CHAR_CLOSE), len(CHAR_CLOSE)
-
-    # The branch is diverged
-    output = ""
-    ahead_m = re.search(
-        r"ahead (\d+)",
-        track,
-    )
-    if ahead_m is not None:
-        output += f"{CHAR_ARROW_UP}{ahead_m.group(1)}"
-
-    behind_m = re.search(
-        r"behind (\d+)",
-        track,
-    )
-    if behind_m is not None:
-        output += f"{CHAR_ARROW_DOWN}{behind_m.group(1)}"
-
-    return yellow(output), len(output)
 
 
 def get_branches() -> list[str]:
@@ -154,6 +122,10 @@ def switch_branch(branch: str) -> int:
 
 def main():
     branches = get_branches()
+    if len(branches) == 0:
+        print("No branches to switch")
+        return
+
     selected = select_branch("\n".join(branches))
     if selected is not None:
         status = switch_branch(selected)
