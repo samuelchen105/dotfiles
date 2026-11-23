@@ -9,7 +9,7 @@ if status is-interactive
 
     # Mac only
     if test $(uname) = Darwin
-
+        # Add more when needed
     end
 
     # Buildpack

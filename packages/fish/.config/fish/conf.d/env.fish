@@ -39,8 +39,6 @@ if command -q go
     fish_add_path "$HOME/go/bin"
     # # Lock go version
     # alias go="~/sdk/go1.24.6/bin/go"
-    # if test $(uname) = Darwin
-    # end
 end
 
 # rust

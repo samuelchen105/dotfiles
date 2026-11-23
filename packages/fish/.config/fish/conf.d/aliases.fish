@@ -1,7 +1,3 @@
-# TODO:
-# Re-organize most of them as autoloading functions instead
-# For simple ones, use abbr 
-
 alias l='eza -lah --icons=auto --classify=always --group-directories-first'
 
 # Git
@@ -20,10 +16,6 @@ alias gst='git stash'
 alias gstp='git stash pop'
 alias gl='gll -n 20'
 
-function gbd
-    nu --config ~/.config/nushell/config.nu ~/.config/nushell/scripts/gbd.nu $argv
-end
-
 # Docker
 alias d='docker'
 alias dk='docker-compose'
@@ -34,62 +26,9 @@ alias dkrm='docker-compose rm -fs'
 alias dkrs='docker-compose restart'
 alias dkps='docker-compose ps -a'
 
-function dkw --wraps='docker-compose logs -n 100 -f'
-    if test (count $argv) -gt 0
-        docker-compose logs -n 100 -f $argv
-        return
-    end
-
-    set -l service (docker-compose ps --services | fzf)
-    if test -n "$service"
-        docker-compose logs -n 100 -f $service
-    end
-end
-
-function drmi --description='List and delete docker images with fzf'
-    # Get docker images (skip header)
-    set -l images (d images --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.CreatedSince}}\t{{.Size}}" | tail -n +2)
-
-    if test (count $images) -eq 0
-        echo "No docker images found."
-        return
-    end
-
-    # Use fzf to select images to delete
-    set -l selected_images (printf '%s\n' $images | fzf --multi --header='Select images to delete (Tab for multi-select)' --bind='tab:toggle' | awk '{print $1":"$2}')
-
-    if test -n "$selected_images"
-        echoc cyan "Deleting selected images:"
-        for image in $selected_images
-            echoc green "Deleting $image"
-            d rmi $image
-        end
-    else
-        echo "No images selected for deletion."
-        return
-    end
-
-    echo "Pruning unused images..."
-    d image prune -f
-end
-
 # K8s
 alias k='kubectl'
 alias kcur='kubectl config current-context'
-
-function kuse
-    set -l selected (k config get-contexts | fzf \
-        --header-lines=1 \
-        --nth=1 \
-        --accept-nth=1 \
-        --layout=reverse \
-        --info=inline \
-        --prompt="Select Context: ") || return
-
-    if test -n "$selected"
-        k config use $selected
-    end
-end
 
 # Quick file/folder opening
 function __select_project
@@ -104,10 +43,11 @@ function __select_project
     echo "$workspace_root/$target"
 end
 
-if test $(uname) = Darwin
-    alias ov='open -a "Visual Studio Code"'
-else if test $(uname) = Linux
-    alias ov='code'
+switch $(uname)
+    case Darwin
+        alias ov='open -a "Visual Studio Code"'
+    case Linux
+        alias ov='code'
 end
 
 function cdp
@@ -127,12 +67,3 @@ end
 
 # Misc
 alias denv='export $(grep -v "^#" .env | xargs | string split " ")'
-
-function cdr --description "Change directory to the Git repository root"
-    if set -l git_root (git rev-parse --show-toplevel 2>/dev/null)
-        cd $git_root
-    else
-        echo "Not a Git repository."
-        return 1
-    end
-end
